@@ -1,11 +1,13 @@
 class WordsController < ApplicationController
+  before_action :verify_dictionary
   before_action :set_word, only: [:show, :update, :destroy, :anagrams]
+
 
   # GET /words
   def index
     @words = Word.all
 
-    render json: @words
+    render json: Word.dicitonary
   end
 
   # GET /words/1
@@ -18,7 +20,7 @@ class WordsController < ApplicationController
     @word = Word.new(word_params)
 
     if @word.save
-      @word.add_to_dictionary
+      @word.add_to_dictionary(@word.dictionary_key)
       render json: @word, status: :created, location: @word
     else
       render json: @word.errors, status: :unprocessable_entity
@@ -36,6 +38,7 @@ class WordsController < ApplicationController
 
   #@word.anagrams 'undefined'
   def anagrams
+    @word.my_anagrams
     render json: @word.anagrams
   end
 
@@ -47,11 +50,16 @@ class WordsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_word
-      @word = Word.find_by(letters: params[:letters])
+      @word = Word.find_by(letters: params[:letters]) || Word.create(letters: params[:letters])
     end
 
     # Only allow a trusted parameter "white list" through.
     def word_params
       params.require(:word).permit(:letters)
+    end
+
+    def verify_dictionary
+      words = Word.all
+      words.each{ |word| word.add_to_dictionary } if Word.dicitonary.empty?
     end
 end

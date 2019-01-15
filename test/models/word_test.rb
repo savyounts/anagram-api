@@ -2,7 +2,7 @@ require_relative '../test_helper'
 
 class WordTest < ActiveSupport::TestCase
   def setup
-    @word = Word.new(letters:"read")
+    @word = Word.create(letters:"read")
   end
 
   def test_word_initizlied_with_an_empty_array_of_anagrams
@@ -20,14 +20,14 @@ class WordTest < ActiveSupport::TestCase
   end
 
   def test_anagrams_returns_its_anagrams
-    dear = Word.new(letters:'dear')
-    dare = Word.new(letters:'dare')
+    dear = Word.create(letters:'dear')
+    dare = Word.create(letters:'dare')
     assert_equal @word.anagrams, ["dear", "dare"]
   end
 
   def test_find_anagrams_returns_array_of_anagrams
-    dear = Word.new('dear')
-    dare = Word.new('dare')
+    dear = Word.create(letters:'dear')
+    dare = Word.create(letters:'dare')
     assert_equal @word.find_anagrams, ["dear", "dare"]
   end
 
