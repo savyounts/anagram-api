@@ -14,10 +14,11 @@ class Word < ApplicationRecord
   def sorted
     self.letters.chars.sort.join
   end
-  #
-  # def anagrams
-  #   # @anagrams || self.find_anagrams
-  # end
+
+  def anagrams
+    @anagrams || "sorry, this word doesn't have any anagrams in our library"
+    # @anagrams || self.find_anagrams
+  end
 
   def find_anagrams
     anagram_array = @@dictionary[self.sorted]
