@@ -18,6 +18,7 @@ class WordsController < ApplicationController
     @word = Word.new(word_params)
 
     if @word.save
+      @word.add_to_dictionary
       render json: @word, status: :created, location: @word
     else
       render json: @word.errors, status: :unprocessable_entity
@@ -33,15 +34,20 @@ class WordsController < ApplicationController
     end
   end
 
+  #@word.anagrams 'undefined'
+  def anagrams
+    render json: @word.anagrams
+  end
+
   # DELETE /words/1
   def destroy
-    @word.destroy
+    params[:letters] ? @word.destroy : Word.destroy_all
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_word
-      @word = Word.find(params[:id])
+      @word = Word.find_by(params[:letters])
     end
 
     # Only allow a trusted parameter "white list" through.

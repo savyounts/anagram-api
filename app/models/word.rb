@@ -3,16 +3,25 @@ class Word < ApplicationRecord
 
   @@dictionary = {}
 
-  def add_to_dictionary(sorted, word)
-    if @@dictionary[sorted]
-     @@dictionary[sorted].include?(word.letters) ? @@dictionary[sorted] << word.letters : nil
+  def add_to_dictionary
+    if @@dictionary[self.sorted]
+     @@dictionary[self.sorted].include?(self.letters) ? @@dictionary[self.sorted] << self.letters : nil
     else
-     @@dictionary[sorted] = [word.letters]
+     @@dictionary[self.sorted] = [self.letters]
     end
   end
 
   def sorted
     self.letters.chars.sort.join
+  end
+  #
+  # def anagrams
+  #   # @anagrams || self.find_anagrams
+  # end
+
+  def find_anagrams
+    anagram_array = @@dictionary[self.sorted]
+    anagram_array.collect {|word| self.anagrams << word unless word == self.letters}
   end
 
 end
