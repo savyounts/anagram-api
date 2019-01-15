@@ -47,7 +47,7 @@ class WordsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_word
-      @word = Word.find_by(params[:letters])
+      @word = Word.find_by(letters: params[:letters])
     end
 
     # Only allow a trusted parameter "white list" through.
