@@ -18,21 +18,20 @@ class WordsController < ApplicationController
   # POST /words
   def create
     not_created = []
-    JSON.parse.(strong_word_params[:words]).each do |word|
-      # binding.pry
+    created = []
+    # binding.pry
+    strong_word_params[:words].each do |word|
       @word = Word.new(letters: word)
 
       if @word.save
         @word.add_to_dictionary
-        # render json: @word, status: :created, location: @word
+        created << word
       else
         not_created << @word.errors
-      #   render json: @word.errors, status: :unprocessable_entity
       end
     end
-    created = render :nothing => true, status: :created
-    error = render not_created, status: :unprocessable_entity
-    not_created ? error : created
+    not_created.empty? ? (render json: {created_words: created}, status: :created) :
+     (render json: {not_created: not_created}, status: :unprocessable_entity)
   end
 
   # PATCH/PUT /words/1
@@ -46,12 +45,17 @@ class WordsController < ApplicationController
 
   def anagrams
     #change to use serializer
-    render json:  @word.find_anagrams(params[:limit])
+    render json:  {anagrams: @word.find_anagrams(params[:limit])}
   end
 
   # DELETE /words/1
   def destroy
+
     params[:letters] ? @word.destroy : Word.destroy_all
+  end
+
+  def strong_word_params
+    params.permit(words: [])
   end
 
   private
@@ -60,14 +64,12 @@ class WordsController < ApplicationController
       @word = Word.find_by(letters: params[:letters]) || Word.create(letters: params[:letters])
     end
 
-    def strong_word_params
-      params.require(:words)
-    end
+
 
     # Only allow a trusted parameter "white list" through.
-    def word_params
-      params.require(:word).permit(:letters)
-    end
+    # def word_params
+    #   params.require(:word).permit(:letters)
+    # end
 
     def verify_dictionary
       words = Word.all
