@@ -1,11 +1,16 @@
 
 class Word < ApplicationRecord
   attr_accessor :dictionary_key
+
   validates :letters, presence: true
   validates :letters, format: { with: /\A[a-zA-Z]+\z/,
     message: "only allows letters" }
   # validates :letters, uniqueness: { message:
   #    "this word is already in our dictionary" }
+
+  # scope methods
+  # min/max/median/average word length
+
 
   @@dictionary = {}
 
@@ -36,5 +41,21 @@ class Word < ApplicationRecord
     @@dictionary[self.dictionary_key].each { |word| anagrams << word unless word == self.letters } if @@dictionary[self.dictionary_key]
     limit ? anagrams.take(limit.to_i) : anagrams
   end
+
+  def self.max_key_length(dictionary)
+    sorted = dictionary.max_by{ |key, value| key.length }.last
+    sorted[0].length
+  end
+
+  def self.min_key_length(dictionary)
+    sorted = dictionary.min_by{ |key, value| key.length }
+    sorted[0].length
+  end
+
+  def self.avg_word_length
+    all_words = Word.all
+    all_words.inject(0.0) { |sum, word| sum + word.letters.length } / all_words.size
+  end
+
 
 end

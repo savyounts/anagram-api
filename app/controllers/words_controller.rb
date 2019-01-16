@@ -10,7 +10,7 @@ class WordsController < ApplicationController
     render json: @words
   end
 
-  # GET /words/1
+  # GET /words/:letters
   def show
     render json: @word
   end
@@ -34,7 +34,7 @@ class WordsController < ApplicationController
      (render json: {not_created: not_created}, status: :unprocessable_entity)
   end
 
-  # PATCH/PUT /words/1
+  # PATCH/PUT /words/:letters
   def update
     if @word.update(word_params)
       render json: @word
@@ -43,12 +43,13 @@ class WordsController < ApplicationController
     end
   end
 
+  # GET anagrams/:letters
   def anagrams
     #change to use serializer
     render json:  {anagrams: @word.find_anagrams(params[:limit])}
   end
 
-  # DELETE /words/1
+  # DELETE /words/:letters or /words
   def destroy
     if params[:letters]
       set_word
@@ -60,9 +61,15 @@ class WordsController < ApplicationController
     end
   end
 
-  def strong_word_params
-    params.permit(words: [])
+  def dictionary_stats
+    render json: { word_count: Word.all.size,
+                   max_word_length: Word.max_key_length(Word.dictionary),
+                   min_word_length: Word.min_key_length(Word.dictionary),
+                   average_word_length: Word.avg_word_length
+                  }
   end
+
+
 
   private
     # Use callbacks to share common setup or constraints between actions.
@@ -70,12 +77,9 @@ class WordsController < ApplicationController
       @word = Word.find_by(letters: params[:letters]) || Word.create(letters: params[:letters])
     end
 
-
-
-    # Only allow a trusted parameter "white list" through.
-    # def word_params
-    #   params.require(:word).permit(:letters)
-    # end
+    def strong_word_params
+      params.permit(words: [])
+    end
 
     def verify_dictionary
       words = Word.all
