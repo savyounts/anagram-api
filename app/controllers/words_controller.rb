@@ -5,7 +5,7 @@ class WordsController < ApplicationController
 
   # GET /words
   def index
-    @words = Word.dicitonary
+    @words = Word.all
 
     render json: @words
   end
@@ -17,14 +17,23 @@ class WordsController < ApplicationController
 
   # POST /words
   def create
-    @word = Word.new(word_params)
+    not_created = []
+    params[:words].each do |word|
+      binding.pry
+      @word = Word.new(letters: word)
 
-    if @word.save
-      @word.add_to_dictionary(@word.dictionary_key)
-      render json: @word, status: :created, location: @word
-    else
-      render json: @word.errors, status: :unprocessable_entity
+      if @word.save
+        @word.add_to_dictionary
+        good_word << word
+        # render json: @word, status: :created, location: @word
+      else
+        not_created << @word.errors
+      #   render json: @word.errors, status: :unprocessable_entity
+      end
     end
+    created = render :nothing => true, status: :created
+    error = render not_created, status: :unprocessable_entity
+    not_created ? error : created
   end
 
   # PATCH/PUT /words/1
@@ -36,7 +45,6 @@ class WordsController < ApplicationController
     end
   end
 
-  #@word.anagrams 'undefined'
   def anagrams
     #change to use serializer
     render json:  @word.find_anagrams(params[:limit])
