@@ -60,7 +60,6 @@ class TestCases < Test::Unit::TestCase
   end
 
   def test_deleting_all_words
-    pend
     res = @client.delete('/words.json')
 
     assert_equal('204', res.code, "Unexpected response code")
@@ -76,7 +75,6 @@ class TestCases < Test::Unit::TestCase
   end
 
   def test_deleting_all_words_multiple_times
-    pend # delete me
 
     3.times do
       res = @client.delete('/words.json')

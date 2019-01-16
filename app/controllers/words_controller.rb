@@ -1,6 +1,6 @@
 class WordsController < ApplicationController
   before_action :verify_dictionary
-  before_action :set_word, only: [:show, :update, :destroy, :anagrams]
+  before_action :set_word, only: [:show, :update, :anagrams]
 
 
   # GET /words
@@ -50,8 +50,14 @@ class WordsController < ApplicationController
 
   # DELETE /words/1
   def destroy
-
-    params[:letters] ? @word.destroy : Word.destroy_all
+    if params[:letters]
+      set_word
+      Word.dictionary[@word.dictionary_key] = Word.dictionary[@word.dictionary_key] - [@word.letters]
+      @word.destroy
+    else
+      Word.dictionary.clear
+      Word.destroy_all
+    end
   end
 
   def strong_word_params
@@ -73,6 +79,6 @@ class WordsController < ApplicationController
 
     def verify_dictionary
       words = Word.all
-      words.each{ |word| word.add_to_dictionary } if Word.dicitonary.empty?
+      words.each{ |word| word.add_to_dictionary } if Word.dictionary.empty?
     end
 end

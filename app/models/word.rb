@@ -26,7 +26,7 @@ class Word < ApplicationRecord
     self.letters.chars.sort.join
   end
 
-  def self.dicitonary
+  def self.dictionary
     @@dictionary
   end
 
