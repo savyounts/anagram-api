@@ -28,14 +28,15 @@ class Word < ApplicationRecord
     self.letters.downcase.chars.sort.join
   end
 
-  def self.dictionary
-    @@dictionary
-  end
-
   def find_anagrams(limit = nil)
     anagrams = []
     @@dictionary[self.dictionary_key].each { |word| anagrams << word unless word == self.letters } if @@dictionary[self.dictionary_key]
     limit ? anagrams.take(limit.to_i) : anagrams
+  end
+
+# Class Methods
+  def self.dictionary
+    @@dictionary
   end
 
   def self.max_key_length(dictionary)
@@ -52,6 +53,14 @@ class Word < ApplicationRecord
     all_words = Word.all
     avg = all_words.inject(0.0) { |sum, word| sum + word.letters.length } / all_words.size
     avg.to_i
+  end
+
+  def self.dictionary_stats(dictionary)
+    { word_count: self.all.count, 
+      max_word_length: self.max_key_length(dictionary),
+      min_word_lenth: self.min_key_length(dictionary),
+      average_word_length: self.avg_word_length
+    }
   end
 
 

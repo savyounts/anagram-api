@@ -28,10 +28,21 @@
   bundle install
   ```
 
-  Run the rails server and head to http://localhost:3000 in the browser
+  If you plan to run the anagram_test.rb file I recommend not seeding the db until after.  
   ```
+  #if running anagram_test.rb
+  rake db:migrate
+  ruby test/anagram_test.rb
+
+  #once done with that file
+  rake db:seed
+  ```
+  
+  ```
+  # if not planning on running anagram_test.rb
   rake db:migrate && db:seed
   ```
+  Run the rails server and head to http://localhost:3000 in the browser
 
 * How to run the test suite
   To run unit tests on the Word model
@@ -106,8 +117,13 @@
   - Upon instantiation of a word, it is added to the dictionary hash. This hash table stores words based on a key of the word's sorted letters. All anagrams of that word are stored in a an array under that hash key for quick lookup.   
   - If a user tries to find a word that is not yet in the database, it will automatically be created and if it has any anagrams, they will show up when requested.
   - If a user tries to find a number or symbol, it will return a message to let them know they can only search words
+
   - Add a uniqueness validation to the Word Model so a word cannot be added twice. The way anagram_test.rb (test_adding_words) is set up currently won't allow for this, but if that test is taken out the validation can be commented back in to use.
+  - Namespacing and versioning could be added if the API was going to be kept up with. I chose not to because the given tests used URIs without any.
+  - Active Model Serializer could also be added to choose which information to display. I again chose not to use one because the amount of information is already pretty limited and being able to see the created_at timestamps were helpful for testing.
+
   - I purposefully excluded true index page that displays all of the words because with a full library (200,000+ words), it takes a very long time to load.
+  - For now there is no need to update words, so I have that controller method commented out, but not completely deleted in case we decide to go back and add that functionality
 
 
 

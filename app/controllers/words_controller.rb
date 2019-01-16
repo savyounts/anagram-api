@@ -3,7 +3,7 @@ class WordsController < ApplicationController
   before_action :set_word, only: [:show, :update, :anagrams, :delete_all]
 
 
-  # GET /
+  # GET /words
   def index
     render html: "Welcome to the Anagrams API! Check out the ReadMe to find out how to find your anagrams
   Try typing '/words/read' at the end of the URL."
@@ -18,7 +18,6 @@ class WordsController < ApplicationController
   def create
     not_created = []
     created = []
-    # binding.pry
     strong_word_params[:words].each do |word|
       @word = Word.new(letters: word)
 
@@ -33,19 +32,15 @@ class WordsController < ApplicationController
      (render json: {not_created: not_created}, status: :unprocessable_entity)
   end
 
-  # PATCH/PUT /words/:letters
-  def update
-    if @word.update(word_params)
-      render json: @word
-    else
-      render json: @word.errors, status: :unprocessable_entity
-    end
-  end
-
-  # GET anagrams/:letters
+  # GET /anagrams/:letters
   def anagrams
     #change to use serializer
     render json:  {anagrams: @word.find_anagrams(params[:limit])}
+  end
+
+# GET /dictionary_stats
+  def dictionary_stats
+    render json: Word.dictionary_stats(Word.dictionary)
   end
 
   # DELETE /words/:letters or /words
@@ -68,13 +63,17 @@ class WordsController < ApplicationController
     @word.destroy
   end
 
-  def dictionary_stats
-    render json: { word_count: Word.all.size,
-                   max_word_length: Word.max_key_length(Word.dictionary),
-                   min_word_length: Word.min_key_length(Word.dictionary),
-                   average_word_length: Word.avg_word_length
-                  }
-  end
+
+
+
+    # PATCH/PUT /words/:letters
+    # def update
+    #   if @word.update(word_params)
+    #     render json: @word
+    #   else
+    #     render json: @word.errors, status: :unprocessable_entity
+    #   end
+    # end
 
 
 

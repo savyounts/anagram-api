@@ -52,4 +52,19 @@ class WordTest < ActiveSupport::TestCase
     assert_equal Word.dictionary['act'], ['cat']
   end
 
+  def test_find_max_key_length
+    ['red', 'three', 'seventeen'].each { |word| Word.new(letters:word).add_to_dictionary }
+    assert_equal Word.max_key_length(Word.dictionary), 9
+  end
+
+  def test_find_min_key_length
+    ['red', 'three', 'seventeen'].each { |word| Word.new(letters:word).add_to_dictionary }
+    assert_equal Word.min_key_length(Word.dictionary), 3
+  end
+
+  def test_find_avg_word_length
+    ['red', 'three', 'seventeen'].each { |word| Word.new(letters:word)}
+    assert_equal Word.avg_word_length, 6
+  end
+
 end
