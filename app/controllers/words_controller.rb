@@ -5,7 +5,7 @@ class WordsController < ApplicationController
 
   # GET /words
   def index
-    @words = Word.all
+    @words = Word.dicitonary
 
     render json: @words
   end
@@ -39,9 +39,7 @@ class WordsController < ApplicationController
   #@word.anagrams 'undefined'
   def anagrams
     #change to use serializer
-    @word.my_anagrams
-    @word.save
-    render json: @word.anagrams
+    render json:  @word.find_anagrams(params[:limit])
   end
 
   # DELETE /words/1

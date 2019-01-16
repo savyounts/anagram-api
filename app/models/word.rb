@@ -1,55 +1,41 @@
 
 class Word < ApplicationRecord
+  attr_accessor :dictionary_key
   validates :letters, presence: true
 
   @@dictionary = {}
 
-  def initialize(letters)
+  def initialize(args)
     super
-    @letters = letters
-    @anagrams = []
+    @letters = args[:letters]
+
     # require 'pry'; binding.pry
     # add 'dictionary_key' attr that is lowercase
     self.add_to_dictionary
   end
 
   def add_to_dictionary
-    if @@dictionary[self.sorted]
-     @@dictionary[self.sorted].include?(self.letters) ? nil : @@dictionary[self.sorted] << self.letters
-     puts "added to dictionary"
+    if @@dictionary[self.dictionary_key]
+     @@dictionary[self.dictionary_key].include?(self.letters) ? nil : @@dictionary[self.dictionary_key] << self.letters
     else
-     @@dictionary[self.sorted] = [self.letters]
-     puts "added to dictionary"
-
+     @@dictionary[self.dictionary_key] = [self.letters]
     end
+  end
+
+  def dictionary_key
+    self.letters.chars.sort.join
   end
 
   def self.dicitonary
     @@dictionary
   end
 
-  # def dictionary_key
-  #   @@dictionary[self.sorted]
-  # end
 
-  def sorted
-    self.letters.chars.sort.join
-  end
 
-  def my_anagrams
-    self.anagrams.empty? ? self.find_anagrams : self.anagrams
-  end
-
-  def find_anagrams
-    anagrams = self.anagrams
-    if @@dictionary[self.sorted]
-      @@dictionary[self.sorted].each do |word|
-        if word != self.letters
-          anagrams << word
-        end
-      end
-    end
-    anagrams || "sorry, no anagrams for this word"
+  def find_anagrams(limit = nil)
+    anagrams = []
+    @@dictionary[self.dictionary_key].each { |word| anagrams << word unless word == self.letters } if @@dictionary[self.dictionary_key]
+    limit ? anagrams.take(limit.to_i) : anagrams
   end
 
 end
