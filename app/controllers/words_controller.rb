@@ -18,13 +18,12 @@ class WordsController < ApplicationController
   # POST /words
   def create
     not_created = []
-    params[:words].each do |word|
-      binding.pry
+    JSON.parse.(strong_word_params[:words]).each do |word|
+      # binding.pry
       @word = Word.new(letters: word)
 
       if @word.save
         @word.add_to_dictionary
-        good_word << word
         # render json: @word, status: :created, location: @word
       else
         not_created << @word.errors
@@ -59,6 +58,10 @@ class WordsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_word
       @word = Word.find_by(letters: params[:letters]) || Word.create(letters: params[:letters])
+    end
+
+    def strong_word_params
+      params.require(:words)
     end
 
     # Only allow a trusted parameter "white list" through.
