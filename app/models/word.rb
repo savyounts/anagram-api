@@ -2,15 +2,16 @@
 class Word < ApplicationRecord
   attr_accessor :dictionary_key
   validates :letters, presence: true
+  validates :letters, format: { with: /\A[a-zA-Z]+\z/,
+    message: "only allows letters" }
+  # validates :letters, uniqueness: { message:
+  #    "this word is already in our dictionary" }
 
   @@dictionary = {}
 
   def initialize(args)
     super
     @letters = args[:letters]
-
-    # require 'pry'; binding.pry
-    # add 'dictionary_key' attr that is lowercase
     self.add_to_dictionary
   end
 
@@ -23,14 +24,12 @@ class Word < ApplicationRecord
   end
 
   def dictionary_key
-    self.letters.chars.sort.join
+    self.letters.downcase.chars.sort.join
   end
 
   def self.dictionary
     @@dictionary
   end
-
-
 
   def find_anagrams(limit = nil)
     anagrams = []

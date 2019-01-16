@@ -21,5 +21,7 @@ Things you may want to cover:
 
 * Deployment instructions
 
-* ...
+* Optional Feature Adds
+  - Don't include proper nouns in dictionary => don't lowercase the dictionary key or give optional param of "include" to put it in dictionary
+   
 # ibotta-api
