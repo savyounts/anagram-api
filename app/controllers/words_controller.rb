@@ -3,11 +3,10 @@ class WordsController < ApplicationController
   before_action :set_word, only: [:show, :update, :anagrams]
 
 
-  # GET /words
+  # GET /
   def index
-    @words = Word.all
-
-    render json: @words
+    render html: "Welcome to the Anagrams API! Check out the ReadMe to find out how to find your anagrams
+  Try typing '/words/read' at the end of the URL."
   end
 
   # GET /words/:letters
@@ -74,7 +73,7 @@ class WordsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_word
-      @word = Word.find_by(letters: params[:letters]) || Word.create(letters: params[:letters])
+      @word = Word.find_by(letters: params[:letters]) || create_new_from_browser(params[:letters])
     end
 
     def strong_word_params
@@ -84,5 +83,10 @@ class WordsController < ApplicationController
     def verify_dictionary
       words = Word.all
       words.each{ |word| word.add_to_dictionary } if Word.dictionary.empty?
+    end
+
+    def create_new_from_browser(word)
+      return "Words can only contain letters" unless word.match(/\A[a-zA-Z]+\z/)
+      Word.create(letters: word)
     end
 end

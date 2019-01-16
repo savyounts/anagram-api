@@ -8,10 +8,6 @@ class Word < ApplicationRecord
   # validates :letters, uniqueness: { message:
   #    "this word is already in our dictionary" }
 
-  # scope methods
-  # min/max/median/average word length
-
-
   @@dictionary = {}
 
   def initialize(args)
@@ -54,7 +50,8 @@ class Word < ApplicationRecord
 
   def self.avg_word_length
     all_words = Word.all
-    all_words.inject(0.0) { |sum, word| sum + word.letters.length } / all_words.size
+    avg = all_words.inject(0.0) { |sum, word| sum + word.letters.length } / all_words.size
+    avg.to_i
   end
 
 
