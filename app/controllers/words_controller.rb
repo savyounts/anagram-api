@@ -1,6 +1,6 @@
 class WordsController < ApplicationController
   before_action :verify_dictionary
-  before_action :set_word, only: [:show, :update, :anagrams]
+  before_action :set_word, only: [:show, :update, :anagrams, :delete_all]
 
 
   # GET /
@@ -58,6 +58,14 @@ class WordsController < ApplicationController
       Word.dictionary.clear
       Word.destroy_all
     end
+  end
+
+# DELETE /anagrams/:letters
+  def delete_all
+    anagrams = @word.find_anagrams
+    Word.dictionary[@word.dictionary_key].clear
+    anagrams.each { |word| Word.find_by(letters: word).destroy }
+    @word.destroy
   end
 
   def dictionary_stats
