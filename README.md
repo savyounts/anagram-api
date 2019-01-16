@@ -68,7 +68,7 @@
   /dictionary_stats
   ```
 
-* Terminal usage  
+* Terminal usage (replace :letters with the word you want)
     To add a word:
      ```
      curl -X POST -d '{ "words": ["read", "dear", "dare"] }' -H 'Content-Type: application/json' http://localhost:3000/words.json
@@ -77,23 +77,28 @@
     Fetch anagrams:
 
     ```
-    curl -i http://localhost:3000/anagrams/read.json
+    curl -i http://localhost:3000/anagrams/:letters.json
     ```
 
     Fetch specific number of anagrams;
 
     ```
-    curl -i http://localhost:3000/anagrams/read.json?limit=1
+    curl -i http://localhost:3000/anagrams/:letters.json?limit=1
     ```
 
     Delete single word:
     ```
-    curl -i -X DELETE http://localhost:3000/words/read.json
+    curl -i -X DELETE http://localhost:3000/words/:letters
     ```
 
     Delete all words:
     ```
-    curl -i -X DELETE http://localhost:3000/words.json
+    curl -i -X DELETE http://localhost:3000/words
+    ```
+
+    Delete a word and all of its anagrams:
+    ```
+    curl -i -X DELETE http://localhost:3000/anagrams/:letters
     ```
 
 * Current Features/Limitations/Optional Feature Adds
