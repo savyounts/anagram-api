@@ -29,9 +29,8 @@ class Word < ApplicationRecord
   end
 
   def find_anagrams(limit = nil)
-    anagrams = []
-    @@dictionary[self.dictionary_key].each { |word| anagrams << word unless word == self.letters } if @@dictionary[self.dictionary_key]
-    limit ? anagrams.take(limit.to_i) : anagrams
+    anagrams = @@dictionary[self.dictionary_key].without(self.letters)
+    limit ? (anagrams.take(limit.to_i)) : anagrams
   end
 
 # Class Methods
@@ -56,7 +55,7 @@ class Word < ApplicationRecord
   end
 
   def self.dictionary_stats(dictionary)
-    { word_count: self.all.count, 
+    { word_count: self.all.count,
       max_word_length: self.max_key_length(dictionary),
       min_word_lenth: self.min_key_length(dictionary),
       average_word_length: self.avg_word_length

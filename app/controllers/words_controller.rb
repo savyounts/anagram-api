@@ -34,7 +34,6 @@ class WordsController < ApplicationController
 
   # GET /anagrams/:letters
   def anagrams
-    #change to use serializer
     render json:  {anagrams: @word.find_anagrams(params[:limit])}
   end
 
