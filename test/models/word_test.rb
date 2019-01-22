@@ -9,6 +9,7 @@ class WordTest < ActiveSupport::TestCase
     cat = Word.new(letters:"cat")
     assert_equal "cat", cat.letters
     assert_equal "act", cat.dictionary_key
+    assert_equal ["cat"], Word.dictionary[cat.dictionary_key]
   end
 
   def test_word_with_letters_is_invalid
@@ -25,12 +26,6 @@ class WordTest < ActiveSupport::TestCase
   def test_dictionary_key_returns_sorted_word_lowercase
     word = Word.new(letters: "ReAd")
     assert_equal word.dictionary_key, "ader"
-  end
-
-  def test_words_added_to_dictionary
-    word = Word.new(letters: 'Bob')
-    word.add_to_dictionary
-    assert Word.dictionary['bbo']
   end
 
   def test_find_anagrams_return_limited_anagrams
