@@ -37,7 +37,7 @@
   #once done with that file
   rake db:seed
   ```
-  
+
   ```
   # if not planning on running anagram_test.rb
   rake db:migrate && db:seed
@@ -57,29 +57,48 @@
 
 * Endpoints in the browser
 
-   To see a specific word (where :letters is the word you want to see)
+   To see a specific word
    ```
-   /words/:letters
+   /words/read
+   {
+    id: 236874,
+    letters: "read",
+    created_at: "2019-01-22T17:25:08.486Z",
+    updated_at: "2019-01-22T17:25:08.486Z",
+    dictionary_key: "ader"
+  }
+
    ```
 
    Find the anagrams of a given word:
    ```
-   /anagrams/:letters
+   /anagrams/read
+   {
+     anagrams: [
+       "dear",
+       "dare"
+     ]
+   }
    ```
 
    Find only a specified amount of anagrams for a word:
    ```
    #change out '1' with the amount of anagrams you would like to see
 
-   /anagrams/:letters?limit=1
+   /anagrams/read?limit=1
+   {
+     anagrams: [
+       "dear"
+     ]
+   }
    ```
 
-   Find total word count max/min/avgerage wor length:
+   Find total word count max/min/average word length:
   ```
   /dictionary_stats
   ```
 
-* Terminal usage (replace :letters with the word you want)
+* Terminal usage
     To add a word:
      ```
      curl -X POST -d '{ "words": ["read", "dear", "dare"] }' -H 'Content-Type: application/json' http://localhost:3000/words.json
@@ -88,18 +107,18 @@
     Fetch anagrams:
 
     ```
-    curl -i http://localhost:3000/anagrams/:letters.json
+    curl -i http://localhost:3000/anagrams/read.json
     ```
 
     Fetch specific number of anagrams;
 
     ```
-    curl -i http://localhost:3000/anagrams/:letters.json?limit=1
+    curl -i http://localhost:3000/anagrams/read.json?limit=1
     ```
 
     Delete single word:
     ```
-    curl -i -X DELETE http://localhost:3000/words/:letters
+    curl -i -X DELETE http://localhost:3000/words/read
     ```
 
     Delete all words:
@@ -109,7 +128,7 @@
 
     Delete a word and all of its anagrams:
     ```
-    curl -i -X DELETE http://localhost:3000/anagrams/:letters
+    curl -i -X DELETE http://localhost:3000/anagrams/read
     ```
 
 * Current Features/Limitations/Optional Feature Adds
