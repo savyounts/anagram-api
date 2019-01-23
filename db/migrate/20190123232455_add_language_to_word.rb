@@ -1,0 +1,5 @@
+class AddLanguageToWord < ActiveRecord::Migration[5.2]
+  def change
+    add_column :words, :lang, :string
+  end
+end
