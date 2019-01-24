@@ -1,5 +1,4 @@
 class WordsController < ApplicationController
-  before_action :verify_dictionary
   before_action :set_word, only: [:show, :update, :anagrams, :delete_all]
 
 
@@ -22,7 +21,6 @@ class WordsController < ApplicationController
       @word = Word.new(letters: word)
 
       if @word.save
-        @word.add_to_dictionary
         created << word
       else
         not_created << @word.errors
@@ -39,27 +37,22 @@ class WordsController < ApplicationController
 
 # GET /dictionary_stats
   def dictionary_stats
-    render json: Word.dictionary_stats(Word.dictionary)
+    render json: Word.dictionary_stats
   end
 
   # DELETE /words/:letters or /words
   def destroy
     if params[:letters]
       set_word
-      Word.dictionary[@word.dictionary_key] = Word.dictionary[@word.dictionary_key] - [@word.letters]
       @word.destroy
     else
-      Word.dictionary.clear
       Word.destroy_all
     end
   end
 
 # DELETE /anagrams/:letters
   def delete_all
-    anagrams = @word.find_anagrams
-    Word.dictionary[@word.dictionary_key].clear
-    anagrams.each { |word| Word.find_by(letters: word).destroy }
-    @word.destroy
+    Word.delete_all(@word)
   end
 
 
@@ -84,11 +77,6 @@ class WordsController < ApplicationController
 
     def strong_word_params
       params.permit(words: [])
-    end
-
-    def verify_dictionary
-      words = Word.all
-      words.each{ |word| word.add_to_dictionary } if Word.dictionary.empty?
     end
 
     def create_new_from_browser(word)
