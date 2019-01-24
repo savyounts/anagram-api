@@ -30,7 +30,9 @@ class Word < ApplicationRecord
 
   def self.avg_word_length
     return if Word.all.empty?
-    Word.average("letters.length")
+    all_words = Word.all
+    avg = all_words.inject(0.0) { |sum, word| sum + word.letters.length } / all_words.size.to_f
+    avg.round
   end
 
   def self.dictionary_stats
